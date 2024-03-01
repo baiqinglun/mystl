@@ -45,7 +45,7 @@ namespace stl{
         }
 
         // 后缀+n，本身没变
-        iterator& operator + (int n)
+        iterator operator + (int n)
         {
             auto it = *this;
             it.m_pointer += n;
@@ -67,7 +67,7 @@ namespace stl{
         }
 
         // 后缀--（后缀--是在前缀--基础上实现的）
-        iterator& operator -- (int)
+        iterator operator -- (int)
         {
             auto it = *this; // 用到了复制运算符
             --(*this);
@@ -75,11 +75,16 @@ namespace stl{
         }
 
         // 后缀-n，本身没变
-        iterator& operator - (int n)
+        iterator operator - (int n)
         {
             auto it = *this;
             it.m_pointer -= n;
             return it;
+        }
+
+        size_t operator - (const iterator& other) const
+        {
+            return m_pointer - other.m_pointer;
         }
 
         iterator& operator -= (int n)

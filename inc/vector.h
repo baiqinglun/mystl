@@ -50,6 +50,14 @@ namespace stl
 		void resize(int n, const T& value);
 		void reserve(int n);
 
+		iterator insert(iterator pos, const T& value);
+		iterator insert(iterator pos,size_t n,const T& value);
+
+		iterator erase(iterator pos);
+		iterator erase(iterator first,iterator last);
+
+		bool is_basic_type();
+
 		void print();
 		const void print() const;
 

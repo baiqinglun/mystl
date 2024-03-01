@@ -311,6 +311,142 @@ inline void stl::Vector<T>::reserve(int n)
 }
 
 template<class T>
+inline typename stl::Vector<T>::iterator stl::Vector<T>::insert(iterator pos, const T& value)
+{
+	return insert(pos, 1, value);
+}
+
+template<class T>
+inline typename stl::Vector<T>::iterator stl::Vector<T>::insert(iterator pos, size_t n, const T& value)
+{
+	size_t size = pos - begin();
+	if (m_size + n <= m_capacity)
+	{
+		for (size_t i = m_size; i > size ; i--)
+		{
+			m_data[i + n - 1] = m_data[i - 1];
+		}
+
+		for (size_t i = 0; i < n; i++)
+		{
+			m_data[i + size] = value;
+		}
+		m_size += n;
+		return iterator(m_data + size);
+	}
+
+	while (n + m_size > m_capacity)
+	{
+		if (m_capacity == 0)
+		{
+			m_capacity = 1;
+		}
+		else
+		{
+			m_capacity *= 2;
+		}
+	}
+
+	T* data = new T[m_capacity];
+	for (size_t i = 0; i < size; i++)
+	{
+		data[i] = m_data[i];
+	}
+
+	for (size_t i = size; i < size+n; i++)
+	{
+		data[i] = value;
+	}
+
+	for (size_t i = size+n; i < n+m_size; i++)
+	{
+		data[i] = m_data[i - n];
+	}
+	if (m_data != nullptr)
+	{
+		delete[] m_data;
+		m_data = nullptr;
+	}
+	m_data = data;
+	m_size += n;
+	return iterator(m_data + size);
+}
+
+template<class T>
+inline typename stl::Vector<T>::iterator stl::Vector<T>::erase(iterator pos)
+{
+	if (pos == end())
+	{
+		throw std::out_of_range("out_of_range");
+	}
+	else if(end() - pos == 1)
+	{
+		m_size -= 1;
+		return end();
+	}
+	else
+	{
+		size_t index = pos - begin();
+		for (size_t i = 0; i < m_size - index - 1; i++)
+		{
+			m_data[index + i] = m_data[index + i + 1];
+		}
+		m_size -= 1;
+		return iterator(m_data + index);
+	}
+}
+
+template<class T>
+inline typename stl::Vector<T>::iterator stl::Vector<T>::erase(iterator first, iterator last)
+{
+	if (last == end())
+	{
+		size_t size = last - first;
+		m_size -= size;
+		return iterator(end()-1);
+	}
+	else
+	{
+		size_t size = last - first;
+		size_t index = first - begin();
+		size_t l = last - begin();
+		if (is_basic_type())
+		{
+			std::memmove(m_data + index, m_data + l, (m_size - l) * sizeof(T));
+		}
+		else
+		{
+			for (size_t i = 0; i < m_size - index - size; i++)
+			{
+				m_data[index + i] = m_data[index + i + size];
+			}
+		}
+		m_size -= size;
+		return iterator(m_data + index);
+	}
+}
+
+template<class T>
+inline bool stl::Vector<T>::is_basic_type()
+{
+	if (std::is_pointer<T>::value)
+	{// 如果是个指针
+		return true;
+	}
+	return (typeid(T) == typeid(bool)) ||
+		(typeid(T) == typeid(char)) ||
+		(typeid(T) == typeid(unsigned char)) ||
+		(typeid(T) == typeid(short)) ||
+		(typeid(T) == typeid(unsigned short)) ||
+		(typeid(T) == typeid(int)) ||
+		(typeid(T) == typeid(unsigned int)) ||
+		(typeid(T) == typeid(long)) ||
+		(typeid(T) == typeid(unsigned long)) ||
+		(typeid(T) == typeid(float)) ||
+		(typeid(T) == typeid(double));
+}
+
+template<class T>
 inline void stl::Vector<T>::print()
 {
 	std::cout << "容量：" << m_capacity << "，大小：" << m_size << std::endl;
