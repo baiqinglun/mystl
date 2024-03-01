@@ -2,11 +2,19 @@
 
 #include <stdexcept>
 
+#include "inc/vector_iterator.h"
+#include "inc/vector_const_iterator.h"
+#include "inc/vector_reverse_iterator.h"
+
 namespace stl
 {
 	template<class T>
 	class Vector
 	{
+		typedef VectorIterator<T> iterator;
+		typedef VectorConstIterator<T> const_iterator;
+		typedef VectorReverseIterator<T> reverse_iterator;
+
 	public:
 		Vector();
 		~Vector();
@@ -28,6 +36,7 @@ namespace stl
 
 		void push_back(const T& value);
 		void pop_back();
+
 		void assign(size_t n, const T& value);
 		void swap(Vector<T>& other);
 		bool empty();
@@ -37,8 +46,19 @@ namespace stl
 		size_t capacity();
 		const size_t capacity() const;
 
+		void resize(int n);
+		void resize(int n, const T& value);
+		void reserve(int n);
+
 		void print();
 		const void print() const;
+
+		iterator begin();
+		iterator end();
+		const_iterator cbegin();
+		const_iterator cend();
+		reverse_iterator rbegin();
+		reverse_iterator rend();
 	private:
 		T* m_data;
 		size_t m_size;

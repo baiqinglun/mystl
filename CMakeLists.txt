@@ -11,4 +11,4 @@ project ("mystl")
 include_directories("./")
 
 add_executable (list "src/list.cpp" "inc/list_const_iterator.h" "inc/list_reverse_iterator.h")
-add_executable (vector "inc/vector.h" "src/vector.cpp")
+add_executable (vector "inc/vector.h" "src/vector.cpp" "inc/vector_iterator.h" "inc/vector_const_iterator.h" "inc/vector_reverse_iterator.h")
